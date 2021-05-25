@@ -1,16 +1,16 @@
 <template>
     <Page>
-        <ActionBar title="Hola to NativeScript-Vue! 1.1">
-          <StackLayout orientation="Horizontal">
-            <Image src="res://fha" width="10%" height="40" verticalAlignment="left"/>
-            <Label text="Version 1.1" width="60%" fontSize="24" verticalAlignment="center" />
-            <Label :text="loginText" width="30%" fontSize="14" textAlignment="right" backgroundColor="#1c6b48"/>
-          </StackLayout>          
-        </ActionBar>
+        <ActionBar title="CRUD1.0 ns">
+          <NavigationButton text="Go Back" android.systemIcon="ic_menu_back"  @tap="$navigateBack"></NavigationButton>
+          <StackLayout orientation="horizontal" horizontalAlignment="right">                        
+            <Label class="fa fa-regular" :text="'fa-login' | fonticon" textAlignment="right"/>
+            <Label :text="loginText" fontSize="14" textAlignment="right"/>        
+          </StackLayout>
+        </ActionBar> 
 
         <StackLayout orientation="vertical">
           <Label text="Login" fontSize="24" height="70" verticalAlignment="center" v-on:tap="$navigateTo(loginPage)"/>
-          <Label text="Aves" fontSize="24" height="70" verticalAlignment="center" />
+          <Label text="Aves" fontSize="24" height="70" verticalAlignment="center" v-on:tap="$navigateTo(avesPage)"/>
           <Label text="Mamiferos" fontSize="24" height="70" verticalAlignment="center" />
         </StackLayout>
 
@@ -19,10 +19,13 @@
 
 <script >
   import Login from '~/components/Login';
+  import Aves from '~/components/Aves';
   import Vue from 'vue';
   import Vuex from 'vuex';
+  import Theme from '@nativescript/theme'
 
   Vue.use(Vuex);
+  Theme.setMode(Theme.Dark);
 
   export default {
     components: {
@@ -32,6 +35,7 @@
       return {
         msg: 'Hello World dd!',
         loginPage: Login,
+        avesPage: Aves,
       }
     },
     computed:{

@@ -2,23 +2,33 @@
     <Page>
       <ActionBar title="Login">
         <NavigationButton text="Go Back" android.systemIcon="ic_menu_back" @tap="$navigateBack"></NavigationButton>
-        <StackLayout orientation="horizontal">                        
-            <Label class="fa fa-regular" :text="'fa-login' | fonticon" />
-            <Label :text="loginText" width="50%" fontSize="14" textAlignment="right"/>        
-        </StackLayout>
+        <ActionItem>
+          <StackLayout orientation="horizontal" horizontalAlignment="right">                        
+            <Label class="fa fa-regular" :text="'fa-login' | fonticon" textAlignment="right"/>
+            <Label :text="loginText" fontSize="14" textAlignment="right"/>        
+          </StackLayout>
+        </ActionItem>
       </ActionBar>
       <StackLayout>        
-        <Label text="Login.. 1.45 " />
-        <TextField v-model="usuario" hint="Usuario" />
-        <TextField v-model="clave"  hint="Password" />
-        <Button text="Login"  backgroundColor="#43b883" @tap="login()"></Button>
-        <Label text="Olvidó su clave"  @tap="forgotPassword()" />
-        
-        <Label class="fa" :text="'fa-anchor' | fonticon" />
+        <Label text="Login.. 1.47 " />
+        <TextField v-model="usuario" hint="Usuario" fontSize="24" />
+        <TextField v-model="clave"  hint="Password"  fontSize="24"/>
+        <Button text="Login" height="70" fontSize="24" class="-primary -rounded-lg" @tap="login()"></Button>
+        <StackLayout class="hr"></StackLayout>
+        <ActivityIndicator :busy="busy"/>
+        <StackLayout orientation="Horizontal">
+          <Label text="Olvidó su clave "  fontSize="24" horizontalAlignment="left" @tap="forgotPassword()"/>
+          <Label class="fa m-t-5" :text="'fa-arrow-right' | fonticon" horizontalAlignment="left" @tap="forgotPassword()"/>
+        </StackLayout>
+        <StackLayout orientation="Horizontal">
+          <Label text="Logout "  fontSize="24" horizontalAlignment="left" @tap="logout()"/>
+          <Label class="fa m-t-5" :text="'fa-arrow-right' | fonticon" horizontalAlignment="left"  @tap="logout()"/>
+        </StackLayout>
       </StackLayout>
+      
     </Page>
 </template>
-s
+
 <script>
 
 import Vue from 'vue';
@@ -39,7 +49,7 @@ Vue.use(Vuex);
       return {
         usuario: "",
         clave: "test",
-        //loginText: "l o g i n",
+        busy: false,
       }
     },
     computed:{
@@ -50,6 +60,7 @@ Vue.use(Vuex);
       ...Vuex.mapMutations(['setUsuarioLogueado']),
       login: async function(){
           try{
+              this.busy = true;
               let requestAxiosOptions = {
                   username: this.usuario,
                   password: this.clave
@@ -60,6 +71,7 @@ Vue.use(Vuex);
               console.log(user);                        
               alert(user.firstName);
               this.setUsuarioLogueado(user);
+              this.busy = false;
           }
           catch (error) {
               alert(error);
@@ -74,7 +86,11 @@ Vue.use(Vuex);
         }).then(result => {
           console.log(result);
         });
-      }     
+      },
+      logout: function(){
+        this.setUsuarioLogueado({});
+        
+      },   
     }
   }
 </script>
