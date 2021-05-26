@@ -1,11 +1,11 @@
 export default class{
 
 
-    constructor(base, usuarioLogueado, end_point) {
+    constructor(base, usuarioLogueado) {
+      this.end_point = "http://192.168.0.6:8082/";
       this.BaseDatos = base;
       this.operaciones = [];
       this.UsuarioLogueado = usuarioLogueado;
-      this.end_point = end_point;
     }
     addOperacion (operacion, tabla, args)
     {
@@ -26,7 +26,7 @@ export default class{
   
       //var body = {"Input": "{'BaseDatos': 'TestDB','Operaciones':[{'Op': 'Seleccion','tabla':'Aves','args':[{'id':'1'}]}]}"};
   
-        var bodyOp = "{'BaseDatos': 'TestDB', 'Operaciones':[";
+        var bodyOp = "{'BaseDatos': "+ this.BaseDatos +", 'Operaciones':[";
           for(var i = 0; i < this.operaciones.length; i++){
             var item = this.operaciones[i];
             if(item[2]  == null){
@@ -44,10 +44,9 @@ export default class{
         return body;
     }
   
-    async execute (usuarioLogueado, end_point)
+    async execute (usuarioLogueado)
     {
       this.usuarioLogueado = usuarioLogueado;
-      this.end_point = end_point;
       
       var args = [];
       try{
@@ -64,7 +63,7 @@ export default class{
                             },
                     body: myvalue
                 };
-        
+                console.log(this.end_point);
                 const response = await fetch(this.end_point + "Db/Input", requestOptions);
                 if(response.status !== 200)
                 {
@@ -81,8 +80,7 @@ export default class{
          }
       catch(error)
       {      
-        args.push({'error': error.message});
-        return {"message": JSON.stringify(args), "error": "true"};
+        return {"message": "\"" + error.message + "\"", "error": "true"};
       }
     }
   };

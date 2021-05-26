@@ -10,14 +10,14 @@
         </ActionItem>
       </ActionBar>
       <StackLayout>        
-        <Label text="Login.. 1.48 " />
-          <ListView for="p in items" class="list-group">
-            <v-template>
-                <StackLayout class="list-group-item">
-                    <Label :text="p.especie" />
-                </StackLayout>
-            </v-template>
-          </ListView>
+        <Label text="Login.. 1.50 " />
+        <button text="Nuevo" fontSize="16" width="20%" horizontalAlignment="right" class="-primary -rounded-lg p-y-0" @tap="$navigateTo(avesEditPage, { props: { id: 0 }})"></button>
+        <SearchBar hint="Buscar" v-model="searchPhrase" borderWidth="1" class="search" @submit="onSubmit" @clear="onSubmit" />
+        <ListView for="p in items" @itemTap="onItemTap" >
+          <v-template height="50">
+              <Label :text="p.especie" fontSize="16" horizontalAlignment="left"/>
+          </v-template>
+        </ListView>
       </StackLayout>
       
     </Page>
@@ -27,6 +27,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import AvesEdit from '~/components/AvesEdit';
 
 
 Vue.use(Vuex);
@@ -39,9 +40,12 @@ Vue.use(Vuex);
     },
     data() {
       return {
-        items: [],      
+        avesEditPage: AvesEdit,    
+
+        items: [1,2,3],      
         serveritemslength: 0, 
         busy: false,
+        searchPhrase: '',
       }
     },
     computed:{
@@ -55,28 +59,35 @@ Vue.use(Vuex);
           try{
             this.animalesAcc.resetOperaciones();
             var args = [];
-            args.push({'search': '', 'type': 'VARCHAR'});
+            args.push({'search': this.searchPhrase, 'type': 'VARCHAR'});
             args.push({'pageNumber': 1, 'type': 'INT'});
             args.push({'itemsPerPage': 1000, 'type': 'INT'});
-            args.push({'sortby': 'id', 'type': 'VARCHAR'});
+            args.push({'sortby': 'especie', 'type': 'VARCHAR'});
             args.push({'sortdesc': 'ASC', 'type': 'VARCHAR'});
             this.animalesAcc.addOperacion("Procedure", "getAves", JSON.stringify(args));
 
-            var response = await this.animalesAcc.execute(this.usuarioLogueado, "http://192.168.0.6:8082/");
-            if(response.error === "false"){
+            var response = await this.animalesAcc.execute(this.usuarioLogueado);
+            if(response.error === "false"){              
               this.items = response.resultados[0].R1;
               this.serveritemslength = response.resultados[1].R2[0].totalRows;
+            }else{
+              alert(response.message);  
             }
           }
           catch(error) {
             alert(error.message);
           }
       },
-    },
-    mounted: function() {
+      onSubmit: async function(){
         await this.getItems();
-        console.log('Items: ');
-        console.log(this.items);
+      },
+      onItemTap: function(args){
+        const id = args.item.id;
+        this.$navigateTo(this.avesEditPage, { props: { id: id }});
+      },
+    },
+    mounted: async function() {
+        await this.getItems();
     },
   }
 </script>
@@ -85,6 +96,10 @@ Vue.use(Vuex);
 <style scoped>
 
 
-
+.search{
+    border-radius: 30;
+    border-width: 2px;
+    background-color: burlywood;
+}
 
 </style>

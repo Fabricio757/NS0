@@ -47,7 +47,7 @@ Vue.use(Vuex);
     },
     data() {
       return {
-        usuario: "",
+        usuario: "Fabri",
         clave: "test",
         busy: false,
       }
