@@ -19,7 +19,7 @@
           <Button text="Borrar" fontSize="16" horizontalAlignment="right" class="secondary -rounded-lg p-y-0" @tap="borrar()"></Button>
         </StackLayout>
         <!-- <Label :text="id" fontSize="14" textAlignment="right"/> -->
-        <TextField v-model="especie" height="70" hint="Especie" fontSize="24" />
+        <TextField v-model="especie" height="70" hint="Especie" fontSize="24"  maxLength="10" />
         <StackLayout orientation="horizontal" horizontalAlignment="center">
             <Button text="Aceptar" fontSize="16" horizontalAlignment="center" class="-primary -rounded-lg p-y-0" @tap="aceptar()"></Button>
             <Button text="Cancelar" fontSize="16" horizontalAlignment="center" class="-primary -rounded-lg p-y-0" @tap="$navigateBack"></Button>

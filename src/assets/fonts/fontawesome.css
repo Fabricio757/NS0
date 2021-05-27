@@ -13,4 +13,7 @@
 .fa-arrow-right:before {
   content: "\f061";
 }
+.fa-qrcode:before {
+  content: "\f029";
+}
 

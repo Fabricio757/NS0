@@ -11,7 +11,7 @@
         <StackLayout orientation="vertical">
           <Label text="Login" fontSize="24" height="70" verticalAlignment="center" v-on:tap="$navigateTo(loginPage)"/>
           <Label text="Aves" fontSize="24" height="70" verticalAlignment="center" v-on:tap="$navigateTo(avesPage)"/>
-          <Label text="Mamiferos" fontSize="24" height="70" verticalAlignment="center" />
+          <Label text="Mamiferos" fontSize="24" height="70" verticalAlignment="center" v-on:tap="$navigateTo(animalesPage)"/>
         </StackLayout>
 
     </Page>
@@ -20,6 +20,7 @@
 <script >
   import Login from '~/components/Login';
   import Aves from '~/components/Aves';
+  import Animales from '~/components/Animales';
   import Vue from 'vue';
   import Vuex from 'vuex';
   import Theme from '@nativescript/theme'
@@ -36,6 +37,7 @@
         msg: 'Hello World dd!',
         loginPage: Login,
         avesPage: Aves,
+        animalesPage: Animales,
       }
     },
     computed:{

@@ -11,8 +11,8 @@
       </ActionBar>
       <StackLayout>        
         <Label text="Login.. 1.47 " />
-        <TextField v-model="usuario" hint="Usuario" fontSize="24" />
-        <TextField v-model="clave"  hint="Password"  fontSize="24"/>
+        <TextField v-model="usuario" hint="Usuario" maxLength="10" fontSize="24" autocapitalizationType="none"/>
+        <TextField v-model="clave"  hint="Password" maxLength="10" fontSize="24" secure="true"/>
         <Button text="Login" height="70" fontSize="24" class="-primary -rounded-lg" @tap="login()"></Button>
         <StackLayout class="hr"></StackLayout>
         <ActivityIndicator :busy="busy"/>
