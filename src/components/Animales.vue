@@ -1,79 +1,53 @@
 <template>
     <Page>
+        <ActionBar title="Aves">
+            <NavigationButton text="Go Back" android.systemIcon="ic_menu_back" @tap="$navigateBack"></NavigationButton>
+            <ActionItem>
+            <StackLayout orientation="horizontal" horizontalAlignment="right">                        
+                <Label class="fa fa-regular" :text="'fa-login' | fonticon" textAlignment="right"/>
+                <Label :text="loginText" fontSize="14" textAlignment="right"/>        
+            </StackLayout>
+            </ActionItem>
+        </ActionBar>
+
         <StackLayout>        
-            <Label text="Animales Edit.. 1.19 " />
-            <TextField v-model="dataqr" hint="qr"></TextField>
-            <Label class="fa" :text="'fa-qrcode' | fonticon" horizontalAlignment="left"  @tap="onScanResult"/>
-            <!-- <Button text="Scan" @tap="onScanResult"></Button> -->
-            <Button text="Reset" @tap="onReset"></Button>
-            
+            <Label text="Animales Edit.. 1.28 " />
+            <QRTextField v-model="qrValue" hint="lea qr"></QRTextField>
         </StackLayout>
     </Page>
 </template>
 
 <script>
 
-    //import QRTextField from "~/mycomponents/QRTextField";
+import Vue from 'vue';
+import Vuex from 'vuex';
+//import AvesEdit from '~/components/AvesEdit';
+import QRTextField from "~/components/mycomponents/QRTextField";
 
+    Vue.use(Vuex);
     var BarcodeScanner = require("nativescript-barcodescanner").BarcodeScanner;
     var barcodescanner = new BarcodeScanner();
 
 export default {
     components:{
-        //QRTextField
+        QRTextField
     },
     data() {
       return {
-        dataqr: "",
+        qrValue: "",
       }
     },
+    computed:{
+        ...Vuex.mapState(['usuarioLogueado']),
+        ...Vuex.mapGetters(['animalesAcc']),
+        loginText() {return this.usuarioLogueado.firstName },
+    },
     methods: {
-        onScanResult: async function(){
-            var data = await this.scanQR();
-            if(! data.error){
-                this.dataqr = data.data;
-            }else{
-                alert(data.data);
-            }
-            
-            console.log("onScanResult: " + this.dataqr);
-        },
-        scanQR: async function(){
 
-            return await barcodescanner.scan({
-                formats: "QR_CODE,EAN_13",   // Pass in of you want to restrict scanning to certain types
-                cancelLabel: "EXIT. Also, try the volume buttons!", // iOS only, default 'Close'
-                cancelLabelBackgroundColor: "#333333", // iOS only, default '#000000' (black)
-                message: "Use the volume buttons for extra light", // Android only, default is 'Place a barcode inside the viewfinder rectangle to scan it.'
-                showFlipCameraButton: true,   // default false
-                preferFrontCamera: false,     // default false
-                showTorchButton: true,        // default false
-                beepOnScan: true,             // Play or Suppress beep on scan (default true)
-                fullScreen: true,             // Currently only used on iOS; with iOS 13 modals are no longer shown fullScreen by default, which may be actually preferred. But to use the old fullScreen appearance, set this to 'true'. Default 'false'.
-                torchOn: false,               // launch with the flashlight on (default false)
-                closeCallback: function () { console.log("Scanner closed"); }, // invoked when the scanner was closed (success or abort)
-                resultDisplayDuration: 500,   // Android only, default 1500 (ms), set to 0 to disable echoing the scanned text
-                orientation: "portrait",     // Android only, optionally lock the orientation to either "portrait" or "landscape"
-                openSettingsIfPermissionWasPreviouslyDenied: true // On iOS you can send the user to the settings app if access was previously denied
-            }).then(
-                // res => { 
-                // console.log(res);
-                // return res.text;
-                // }
-                function(result) {
-                    console.log("Scan format: " + result.format);
-                    console.log("Scan text:   " + result.text);
-                    return ({"data": result.text, "error": false});
-                },
-                function(error) {
-                    console.log("No scan: " + error);
-                    return ({"data": error, "error": true});                    
-                }
-            );
-        },
-        onReset: function(){
-            this.dataqr = "reseteado";
-        }
     },
 }
 </script>
+
+<style scoped>
+
+</style>

@@ -1,8 +1,10 @@
 <template>
-    <StackLayout orientation="Horizontal">        
-        <TextField v-model="dataqr" hint="qr"></TextField>
-        <Label class="fa" :text="'fa-qrcode' | fonticon" horizontalAlignment="left"  @tap="onScanResult"/>
-    </StackLayout>
+    <GridLayout columns="6*,40" rows="50">
+        <TextField row="0" col="0" v-model="localValue" fontSize="24" borderWidth="2"  :hint="hint"></TextField>
+        <Label row="0" col="1" class="fa" fontSize="36" :text="'fa-qrcode' | fonticon" 
+                horizontalAlignment="left" verticalAlignment="center" @tap="onScanResult"                
+                />
+    </GridLayout>
 </template>
 
 <script>
@@ -11,21 +13,35 @@
   var barcodescanner = new BarcodeScanner();
 
 export default {
-        data() {
+    props: {
+        value: {
+          required: true
+        },
+        hint: '',
+      },
+    data() {
       return {
-        dataqr: "",
+        localValue: this.value,
       }
     },
+    watch: {
+        localValue (newValue) {
+          this.$emit('input', newValue)
+        },
+        value (newValue) {
+          this.localValue = newValue
+        },
+     },
     methods: {
         onScanResult: async function(){
             var data = await this.scanQR();
             if(! data.error){
-                this.dataqr = data.data;
+                this.localValue = data.data;
             }else{
                 alert(data.data);
             }
             
-            console.log("onScanResult: " + this.dataqr);
+            console.log("onScanResult: " + this.localValue);
         },
         scanQR: async function(){
 
@@ -45,17 +61,10 @@ export default {
                 orientation: "portrait",     // Android only, optionally lock the orientation to either "portrait" or "landscape"
                 openSettingsIfPermissionWasPreviouslyDenied: true // On iOS you can send the user to the settings app if access was previously denied
             }).then(
-                // res => { 
-                // console.log(res);
-                // return res.text;
-                // }
                 function(result) {
-                    console.log("Scan format: " + result.format);
-                    console.log("Scan text:   " + result.text);
                     return ({"data": result.text, "error": false});
                 },
                 function(error) {
-                    console.log("No scan: " + error);
                     return ({"data": error, "error": true});                    
                 }
             );
