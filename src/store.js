@@ -1,13 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import AccesoDB from './js/accesoDB';
+import AccesoRest from './js/accesoRest';
+import AccesoSQLite from './js/accesoSQLite';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     usuarioLogueado: {},
-    animalesDB: new AccesoDB("'TestDB'"),
+    animalesDB: new AccesoRest("'TestDB'"),
+    peopleSQLite: new AccesoSQLite("my.db"),    
   },
   mutations: {
       setUsuarioLogueado (state, user) {
@@ -17,6 +19,7 @@ export default new Vuex.Store({
   },
   getters: {
     animalesAcc: state => { return state.animalesDB },
+    peopleAcc: state => { return state.peopleSQLite },
   },
   actions: {
 
