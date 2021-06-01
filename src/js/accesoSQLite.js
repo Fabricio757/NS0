@@ -93,6 +93,8 @@ export default class{
                 var operacion = this.operaciones[i];
                 var args = [];
                 var argsValues = [];
+                var argsKeys = [];
+                var argsKeysValues = [];
 
                 if(operacion[2].length > 0){
                    var arguments2 = JSON.parse(operacion[2]);
@@ -100,8 +102,15 @@ export default class{
                   for(var a = 0; a < arguments2.length; a++){
                     var keysbyindex = Object.keys(arguments2[a]);
                     var nameArg = keysbyindex[0];
-                    args.push(nameArg);
-                    argsValues.push(arguments2[a][nameArg]);
+                    
+                    if(keysbyindex[1].toUpperCase() === "KEY"){
+                      argsKeys.push(nameArg);
+                      argsKeysValues.push(arguments2[a][nameArg]);
+                    }
+                    else{
+                      args.push(nameArg);
+                      argsValues.push(arguments2[a][nameArg]);
+                    }
                   }
                 }
 
@@ -109,7 +118,7 @@ export default class{
                 switch (operacion[0]) {
                   case "Seleccion": {
                     qry = "SELECT * FROM " + operacion[1];
-                    if(args != []){
+                    if(args.length > 0){
                       qry += " WHERE ";
                       for(var p = 0; p < args.length; p++){
                         qry += (p == 0 ? "" : " and ") + args[p] + " = :" + args[p] + " "; 
@@ -118,15 +127,37 @@ export default class{
                     break;
                   }
                   case "Insert": {
-                    qry = "INSERT INTO " + operacion[1];
+                    var t = "?,".repeat(args.length);
+                    t = t.slice(0,t.length-1);
+                    t = "(" + t + ")";
+                    qry = "INSERT INTO " + operacion[1] + "(" + args.join(",") + ") VALUES " + t;
                     break;
                   }
                   case "Delete": {
                     qry = "DELETE FROM " + operacion[1];
+                    if(args.length > 0){
+                      qry += " WHERE ";
+                      for(var p = 0; p < args.length; p++){
+                        qry += (p == 0 ? "" : " and ") + args[p] + " = :" + args[p] + " "; 
+                      }
+                    }                    
                     break;
                   }
                   case "Update": {
                     qry = "UPDATE " + operacion[1] + " SET ";
+                    var qrySet = "";
+                    var qryWhere = "";
+                    if(args.length > 0){
+                      for(var p = 0; p < args.length; p++){
+                          qrySet += (qrySet === "" ? "" : " , ") + args[p] + " = :" + args[p] + " "; 
+                      }
+                      for(var p = 0; p < argsKeys.length; p++){
+                          qryWhere += (qryWhere === "" ? "" : " , ") + argsKeys[p] + " = :" + argsKeys[p] + " "; 
+                          argsValues.push(argsKeysValues[p]);
+                      }
+
+                    }   
+                    qry += qrySet + " WHERE " + qryWhere;
                     break;
                   }
                   default: {
