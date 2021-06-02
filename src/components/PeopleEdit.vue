@@ -167,7 +167,7 @@ Vue.use(Vuex);
 </script>
 
 
-<style scoped>
+<style>
 
   .labelH1{
     font-Size: 24;

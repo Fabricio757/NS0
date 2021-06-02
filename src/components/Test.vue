@@ -2,28 +2,29 @@
   <Page>
     <ActionBar title="NativeScript App"></ActionBar>
     <FlexboxLayout flexDirection="column">
-      <Label text="Test.. 1.02 " />
-      <DatePicker v-model="selectedDate" />
-      <Label :text="selectedDate" style="text-align: center" />
-      <button text="setDate" @tap="setDate"></button>
+      <Label :text="this.ahora"/>
+      <MyDatePicker v-model="ahora"></MyDatePicker>
+      <button text="Set" fontSize="16" horizontalAlignment="center" width="30%" class="secondary -rounded-lg p-y-0" @tap="SetNow"></button>
     </FlexboxLayout>
   </Page>
 </template>
 <script >
+
+import MyDatePicker from "~/components/mycomponents/MyDatePicker";
+
 export default {
+  components:{
+        MyDatePicker
+    },
   data() {
     return {
-      selectedDate: undefined,
+      ahora: Date.now(),
     };
   },
-  mounted: function(){
-    this.selectedDate = new Date("1972-01-20");
-  },
   methods:{
-      setDate: function(){
-          alert('setDate');
-          this.selectedDate = new Date("2017-08-31");
-      },
+    SetNow: function(){
+      this.ahora = Date.now();
+    },
   },
 };
 </script>

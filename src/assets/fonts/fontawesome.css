@@ -16,4 +16,7 @@
 .fa-qrcode:before {
   content: "\f029";
 }
+.fa-calendar:before {
+  content: "\f133";
+}
 
