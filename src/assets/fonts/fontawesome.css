@@ -19,4 +19,6 @@
 .fa-calendar:before {
   content: "\f133";
 }
-
+.fa-check:before {
+  content: "\f00c";
+}

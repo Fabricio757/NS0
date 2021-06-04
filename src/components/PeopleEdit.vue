@@ -13,7 +13,7 @@
       <StackLayout class="hr" height="70"></StackLayout>
 
       <StackLayout>        
-        <Label text="People Edit.. 1.12 " />
+        <Label text="People Edit.. 1.20 " />
         <StackLayout>
           <Label :text="this.esNuevo" class="text-primary h2" textAlignment="left" />
           <Button text="Borrar" fontSize="16" horizontalAlignment="right" class="secondary -rounded-lg p-y-0" @tap="borrar()"></Button>
@@ -21,10 +21,11 @@
         <!-- <Label :text="id" fontSize="14" textAlignment="right"/> -->
         <TextField v-model="firstname" height="70" hint="Nombre" fontSize="24"  maxLength="10" />
         <TextField v-model="lastname" height="70" hint="Apellido" fontSize="24"  maxLength="10" />
-    <FlexboxLayout flexDirection="column">
-      <DatePicker v-model="birthday" />
-      <Label :text="birthday" style="text-align: center" />      
-    </FlexboxLayout>
+
+        <MyDatePicker v-model="birthday" letra="24" height="120"></MyDatePicker>
+
+        <StackLayout class="hr" height="70"></StackLayout>
+        
         <StackLayout orientation="horizontal" horizontalAlignment="center">
             <Button text="Aceptar" fontSize="16" horizontalAlignment="center" class="-primary -rounded-lg p-y-0" @tap="aceptar()"></Button>
             <Button text="Cancelar" fontSize="16" horizontalAlignment="center" class="-primary -rounded-lg p-y-0" @tap="$navigateBack"></Button>
@@ -39,6 +40,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import People from '~/components/People';
+import MyDatePicker from "~/components/mycomponents/MyDatePicker";
 
 Vue.use(Vuex);
 
@@ -46,15 +48,14 @@ Vue.use(Vuex);
   export default {
 
     components: {
-
+      MyDatePicker,
     },
     props: ['id'],
     data() {
-      return {
-        //id: 0,
+      return {        
         firstname: '',
         lastname: '',
-        birthday: undefined,
+        birthday: 1641600000,
         peoplePage: People,
       }
     },        
@@ -77,9 +78,9 @@ Vue.use(Vuex);
             this.peopleAcc.addOperacion("Seleccion", "People", JSON.stringify(args));
             var response = await this.peopleAcc.execute(this.usuarioLogueado);
             if(response.error === "false"){              
-              this.firstname = await response.resultados[0].R1[0].firstname;
-              this.lastname = await response.resultados[0].R1[0].lastname;   
-              this.birthday = new Date("2017-01-20");        
+              this.firstname = response.resultados[0].R1[0].firstname;
+              this.lastname = response.resultados[0].R1[0].lastname;   
+              this.birthday = response.resultados[0].R1[0].birthday;  
             }else{
               alert(response.message);  
             }
@@ -156,9 +157,11 @@ Vue.use(Vuex);
             alert(error.message);
           }
       },
+      SetNow: async function(){
+        this.fechaNac = "Fecha Nacimiento";
+      },
     },
     mounted: async function(){
-      this.birthday = new Date("1972-01-20");
       if(this.id != 0){
         await this.getItem();
       }
