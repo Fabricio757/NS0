@@ -22,3 +22,9 @@
 .fa-check:before {
   content: "\f00c";
 }
+.fa-filter:before {
+  content: "\f0b0";
+}
+.fa-search:before {
+  content: "\f002";
+}

@@ -1,47 +1,74 @@
 const Sqlite = require("nativescript-sqlite");
+const fs = require("tns-core-modules/file-system");
 
 export default class{
 
 
     constructor(base, usuarioLogueado) {
       
+      if(base == "products.db"){
 
-      (new Sqlite("my.db")).then(db => {
+        if (!Sqlite.exists("products.db")) {
+          try{
+          console.log("no existe products");
+          Sqlite.copyDatabase("products.db");          
+          console.log("products copiado");
+          }
+          catch(error){
+            console.log(error);
+          }
+        }else{
+          console.log("Existe Products!");
+        }
+
+        (new Sqlite("products.db")).then(db => {
             this.db = db;
-            //db.execSQL("DROP TABLE people");
             db.resultType(Sqlite.RESULTSASOBJECT);
-            db.execSQL("CREATE TABLE IF NOT EXISTS people (id INTEGER PRIMARY KEY AUTOINCREMENT, firstname TEXT, lastname TEXT, birthday DATETIME)").then(id => {
-            console.log("TABLE CREATED");
         }, error => {
-            console.log("CREATE TABLE ERROR", error);
+            console.log("OPEN DB ERROR", error);
         });
-    }, error => {
-        console.log("OPEN DB ERROR", error);
-    });
 
+        
+      }
+
+
+      if(base == "my.db"){
+        (new Sqlite("my.db")).then(db => {
+              this.db = db;
+              //db.execSQL("DROP TABLE people");
+              db.resultType(Sqlite.RESULTSASOBJECT);
+              db.execSQL("CREATE TABLE IF NOT EXISTS people (id INTEGER PRIMARY KEY AUTOINCREMENT, firstname TEXT, lastname TEXT, birthday DATETIME)").then(id => {
+              console.log("TABLE CREATED");
+              }, error => {
+                  console.log("CREATE TABLE ERROR", error);
+              });
+          }, error => {
+              console.log("OPEN DB ERROR", error);
+          });
+      }
 
       this.BaseDatos = base;
       this.operaciones = [];
       this.UsuarioLogueado = usuarioLogueado;
     }
 
-    insert(){
-      this.db.execSQL("INSERT INTO people (firstname, lastname) VALUES (?, ?)", ["Fabricio", "Antonini"]).then(id => {
-        console.log("registro insertado");
-      }, error => {
-          console.log("INSERT ERROR", error);
-      })
-    }
+    // insert(){
+    //   this.db.execSQL("INSERT INTO people (firstname, lastname) VALUES (?, ?)", ["Fabricio", "Antonini"]).then(id => {
+    //     console.log("registro insertado");
+    //   }, error => {
+    //       console.log("INSERT ERROR", error);
+    //   })
+    // }
 
-    async get(){
-      try{
-          const result = await this.db.all("SELECT firstname as firstname, lastname as lastname FROM people", []);
-          return result;
-      }
-      catch(error){
-          return {"message": "login failed", "error": "true"};
-      }
-    }
+    // async get(){
+    //   try{
+    //       const result = await this.db.all("SELECT firstname as firstname, lastname as lastname FROM people", []);
+    //       return result;
+    //   }
+    //   catch(error){
+    //       return {"message": "login failed", "error": "true"};
+    //   }
+    // }
 
 
     addOperacion (operacion, tabla, args)
@@ -186,5 +213,28 @@ export default class{
         return {"message": "\"" + error.message + "\"", "error": "true"};
       }
     }
+
+    async executeQuery (usuarioLogueado, qry, argsValues)
+    {
+      try{
+        if(usuarioLogueado)
+        {
+          const result = await this.db.all(qry, argsValues);
+          var st = '[{ \"R1\":'+ JSON.stringify(result) +'}]';
+          var resultados = JSON.parse(st);
+
+          var resultado = {"resultados": resultados, "error": "false" };
+          console.log(resultado);
+          return resultado; 
+        } else 
+        {
+            return {"message": "login failed", "error": "true"};
+        }
+      }
+      catch(error){
+        return {"message": "\"" + error.message + "\"", "error": "true"};
+      }
+    }
+
   };
   

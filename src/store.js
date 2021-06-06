@@ -10,6 +10,7 @@ export default new Vuex.Store({
     usuarioLogueado: {},
     animalesDB: new AccesoRest("'TestDB'"),
     peopleSQLite: new AccesoSQLite("my.db"),    
+    productsSQLite: new AccesoSQLite("products.db"),    
   },
   mutations: {
       setUsuarioLogueado (state, user) {
@@ -20,6 +21,7 @@ export default new Vuex.Store({
   getters: {
     animalesAcc: state => { return state.animalesDB },
     peopleAcc: state => { return state.peopleSQLite },
+    productsAcc: state => { return state.productsSQLite },
   },
   actions: {
 

@@ -13,6 +13,7 @@
           <Label text="Aves" fontSize="24" height="70" verticalAlignment="center" v-on:tap="$navigateTo(avesPage)"/>
           <Label text="Mamiferos" fontSize="24" height="70" verticalAlignment="center" v-on:tap="$navigateTo(animalesPage)"/>
           <Label text="People SQLite" fontSize="24" height="70" verticalAlignment="center" v-on:tap="$navigateTo(peoplePage)"/>
+          <Label text="Products SQLite" fontSize="24" height="70" verticalAlignment="center" v-on:tap="$navigateTo(productsPage)"/>
           <Label text="Test" fontSize="24" height="70" verticalAlignment="center" v-on:tap="$navigateTo(testPage)"/>
         </StackLayout>
 
@@ -24,6 +25,7 @@
   import Aves from '~/components/Aves';
   import Animales from '~/components/Animales';
   import People from '~/components/People';
+  import Products from '~/components/Products';
   import Test from '~/components/Test';
   import Vue from 'vue';
   import Vuex from 'vuex';
@@ -43,6 +45,7 @@
         avesPage: Aves,
         animalesPage: Animales,
         peoplePage: People,
+        productsPage: Products,
         testPage: Test,
       }
     },

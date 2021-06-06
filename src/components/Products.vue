@@ -1,6 +1,6 @@
 <template>
     <Page>
-        <ActionBar title="People">
+        <ActionBar title="Products">
             <NavigationButton text="Go Back" android.systemIcon="ic_menu_back" @tap="$navigateTo(appPage)"></NavigationButton>
             <ActionItem>
             <StackLayout orientation="horizontal" horizontalAlignment="right">                        
@@ -10,9 +10,9 @@
             </ActionItem>
         </ActionBar>
         <StackLayout>        
-            <Label text="People SQLite.. 1.21 " />
-            <button text="Nuevo" fontSize="16" width="20%" horizontalAlignment="right" class="-primary -rounded-lg p-y-0" @tap="$navigateTo(peopleEditPage, { props: { id: 0 }})"></button>
-            <!-- <SearchBar hint="Buscar" v-model="searchPhrase" borderWidth="1" class="search" @submit="onSubmit" @clear="onSubmit" /> -->
+            <Label text="Products SQLite.. 1.21 " />
+            <!-- <button text="Nuevo" fontSize="16" width="20%" horizontalAlignment="right" class="-primary -rounded-lg p-y-0" @tap="$navigateTo(productsEditPage, { props: { id: 0 }})"></button> -->
+            
             
             
             
@@ -27,8 +27,8 @@
                 <v-template height="50">
                     <StackLayout>
                         <StackLayout orientation="Horizontal">
-                            <Label :text="p.firstname"  fontSize="16" horizontalAlignment="left"/>
-                            <Label :text="p.lastname"  fontSize="16" horizontalAlignment="left"/>
+                            <Label :text="p.Descripcion"  fontSize="16" horizontalAlignment="left"/>
+                            <Label :text="p.Codigo"  fontSize="16" horizontalAlignment="left"/>
                         </StackLayout>                    
                         <Label :text="utils.dateToDMY(p.birthday)" fontSize="12" horizontalAlignment="left"/>
                     </StackLayout>                    
@@ -45,7 +45,7 @@ import Vuex from 'vuex';
 
 import Utils from '~/js/Utils';
 import App from '~/components/App';
-import PeopleEdit from '~/components/PeopleEdit';
+//import ProductsEdit from '~/components/ProductsEdit';
 import MySearchBar from '~/components/mycomponents/MySearchBar';
 
 
@@ -58,7 +58,7 @@ export default {
     data() {
         return {
             utils: new Utils(),
-            peopleEditPage: PeopleEdit, 
+            //productsEditPage: ProductsEdit, 
             appPage: App,
             items: [],
 
@@ -69,16 +69,16 @@ export default {
     },
     computed:{
         ...Vuex.mapState(['usuarioLogueado']),
-        ...Vuex.mapGetters(['peopleAcc']),
+        ...Vuex.mapGetters(['productsAcc']),
         loginText() {return this.usuarioLogueado.firstName },
     },
     methods: {
       getItems: async function(){
           try{
-            this.peopleAcc.resetOperaciones();
+            this.productsAcc.resetOperaciones();
             var args = [];
-            this.peopleAcc.addOperacion("Seleccion", "People", JSON.stringify(args));
-            var response = await this.peopleAcc.execute(this.usuarioLogueado);
+            this.productsAcc.addOperacion("Seleccion", "Products", JSON.stringify(args));
+            var response = await this.productsAcc.execute(this.usuarioLogueado);
             if(response.error === "false"){              
               this.items = response.resultados[0].R1;
             }else{
@@ -92,7 +92,7 @@ export default {
       },
       searchItems: async function(){
           try{
-            this.peopleAcc.resetOperaciones();
+            this.productsAcc.resetOperaciones();
             var args = [];
             if(this.searchNombre != ''){
                 args.push({ 'firstname' : this.searchNombre, 'type':'VARCHAR'});
@@ -100,8 +100,8 @@ export default {
             if(this.searchApellido){
                 args.push({ 'lastname' : this.searchApellido, 'type':'VARCHAR'});
             }
-            this.peopleAcc.addOperacion("Seleccion", "People", JSON.stringify(args));
-            var response = await this.peopleAcc.execute(this.usuarioLogueado);
+            this.productsAcc.addOperacion("Seleccion", "Products", JSON.stringify(args));
+            var response = await this.productsAcc.execute(this.usuarioLogueado);
             if(response.error === "false"){              
               this.items = response.resultados[0].R1;
             }else{
@@ -114,14 +114,14 @@ export default {
 
       },
       insert: function() {
-          this.peopleAcc.insert();
+          this.productsAcc.insert();
       },
       onSubmit: async function(){
         await this.getItems();
       },
       onItemTap: function(args){
         const id = args.item.id;
-        this.$navigateTo(this.peopleEditPage, { props: { id: id }});
+        //this.$navigateTo(this.productsEditPage, { props: { id: id }});
       },
       showFiles: function() {
           
